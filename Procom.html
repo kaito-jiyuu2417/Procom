@@ -1,0 +1,2646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PROCOM // Unified Media & Signal Nexus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ==========================================================================
+       PROCOM DESIGN SYSTEM // CORE TOKENS & RESET
+       ========================================================================== */
+    :root {
+      --bg-base: #07090e;
+      --bg-surface: #0e121b;
+      --bg-surface-elevated: #151a27;
+      --bg-glass: rgba(14, 18, 27, 0.72);
+      --bg-glass-heavy: rgba(10, 13, 20, 0.88);
+      
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --border-medium: rgba(255, 255, 255, 0.14);
+      --border-active: rgba(0, 242, 254, 0.4);
+      
+      --accent-cyan: #00f2fe;
+      --accent-violet: #8a2be2;
+      --accent-emerald: #00e676;
+      --accent-rose: #ff2a6d;
+      --accent-amber: #ffb300;
+      
+      --text-primary: #f0f4fc;
+      --text-secondary: #9aa5be;
+      --text-muted: #5a6680;
+      
+      --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      --ease-fluid: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+      
+      --shadow-ambient: 0 16px 40px -10px rgba(0, 0, 0, 0.6);
+      --shadow-glow: 0 0 24px -4px rgba(0, 242, 254, 0.3);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 22px;
+      --radius-pill: 9999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    /* Ambient Background Mesh */
+    .ambient-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      background: 
+        radial-gradient(circle at 15% 20%, rgba(138, 43, 226, 0.12), transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(0, 242, 254, 0.10), transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(7, 9, 14, 0.8), var(--bg-base));
+      opacity: 0.9;
+    }
+
+    /* ==========================================================================
+       TOP HORIZON (COMMAND DECK)
+       ========================================================================== */
+    .horizon-deck {
+      position: relative;
+      z-index: 30;
+      height: 64px;
+      padding: 0 24px;
+      background: var(--bg-glass-heavy);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .brand-symbol {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+    }
+
+    .brand-symbol svg {
+      width: 18px;
+      height: 18px;
+      color: #fff;
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #fff, var(--text-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-badge {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+      background: rgba(0, 242, 254, 0.12);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      color: var(--accent-cyan);
+    }
+
+    /* Spatial Mode Switcher */
+    .mode-switch-track {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      padding: 3px;
+      border-radius: var(--radius-pill);
+      display: flex;
+      gap: 2px;
+    }
+
+    .mode-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: all 0.25s var(--ease-fluid);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mode-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .mode-btn.active {
+      background: var(--bg-surface-elevated);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4), inset 0 0 0 1px var(--border-medium);
+    }
+
+    .mode-btn.active .node-dot {
+      background: var(--accent-cyan);
+      box-shadow: 0 0 8px var(--accent-cyan);
+    }
+
+    .node-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: all 0.25s;
+    }
+
+    /* Horizon Quick-Actions */
+    .horizon-controls {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    /* Sonar (Search) Input */
+    .sonar-search {
+      position: relative;
+      width: 220px;
+      transition: width 0.3s var(--ease-fluid);
+    }
+
+    .sonar-search:focus-within {
+      width: 300px;
+    }
+
+    .sonar-search input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-pill);
+      padding: 7px 12px 7px 34px;
+      color: var(--text-primary);
+      font-size: 0.8rem;
+      font-family: var(--font-main);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .sonar-search input:focus {
+      background: var(--bg-surface-elevated);
+      border-color: var(--border-active);
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.15);
+    }
+
+    .sonar-search svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      color: var(--text-muted);
+    }
+
+    .icon-action-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .icon-action-btn:hover {
+      background: var(--bg-surface-elevated);
+      color: var(--text-primary);
+      border-color: var(--border-medium);
+    }
+
+    .badge-counter {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 16px;
+      height: 16px;
+      background: var(--accent-rose);
+      border-radius: 50%;
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 6px var(--accent-rose);
+    }
+
+    .persona-trigger {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 8px 4px 4px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .persona-trigger:hover {
+      border-color: var(--border-medium);
+      background: var(--bg-surface-elevated);
+    }
+
+    .persona-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #ff007f, #7928ca);
+      object-fit: cover;
+    }
+
+    .persona-tag {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      padding-right: 4px;
+    }
+
+    /* ==========================================================================
+       MAIN SPATIAL MATRIX (WORKSPACE)
+       ========================================================================== */
+    .spatial-matrix {
+      position: relative;
+      z-index: 10;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 450px;
+      height: calc(100vh - 64px);
+      overflow: hidden;
+      transition: grid-template-columns 0.4s var(--ease-fluid);
+    }
+
+    .spatial-matrix.mode-resonator {
+      grid-template-columns: 1fr 0px;
+    }
+
+    .spatial-matrix.mode-synapse {
+      grid-template-columns: 0px 1fr;
+    }
+
+    /* ==========================================================================
+       DECK 1: THE RESONATOR (MEDIA ECOSYSTEM)
+       ========================================================================== */
+    .resonator-deck {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      border-right: 1px solid var(--border-subtle);
+      overflow: hidden;
+      background: rgba(7, 9, 14, 0.4);
+    }
+
+    .resonator-subbar {
+      padding: 12px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(14, 18, 27, 0.4);
+    }
+
+    .filter-prism {
+      display: flex;
+      gap: 8px;
+    }
+
+    .prism-chip {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .prism-chip:hover {
+      color: var(--text-secondary);
+      border-color: var(--border-medium);
+    }
+
+    .prism-chip.active {
+      background: rgba(0, 242, 254, 0.1);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .deck-metrics {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .metric-item span {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    /* Resonator Canvas (Mosaic Grid) */
+    .resonator-viewport {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 28px 100px 28px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-medium) transparent;
+    }
+
+    .resonator-viewport::-webkit-scrollbar {
+      width: 6px;
+    }
+    .resonator-viewport::-webkit-scrollbar-thumb {
+      background: var(--border-medium);
+      border-radius: 3px;
+    }
+
+    .media-mosaic {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 24px;
+    }
+
+    /* Asymmetric Media Prism Card (Not Instagram style) */
+    .prism-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform 0.3s var(--ease-fluid), border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .prism-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-ambient);
+    }
+
+    .prism-header {
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(180deg, rgba(21, 26, 39, 0.9), transparent);
+    }
+
+    .origin-node {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .origin-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid var(--border-medium);
+    }
+
+    .origin-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .origin-handle {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .origin-sector {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .prism-optics-tag {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* Media Viewport Frame */
+    .prism-stage {
+      position: relative;
+      width: 100%;
+      background: #000;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .prism-stage.aspect-cine { aspect-ratio: 16 / 9; }
+    .prism-stage.aspect-square { aspect-ratio: 1 / 1; }
+    .prism-stage.aspect-tall { aspect-ratio: 4 / 5; }
+
+    .prism-stage img, 
+    .prism-stage video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: filter 0.3s;
+    }
+
+    .video-telemetry-overlay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent-cyan);
+      border: 1px solid rgba(0, 242, 254, 0.2);
+    }
+
+    .video-telemetry-overlay .rec-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent-rose);
+      border-radius: 50%;
+      animation: pulseRecord 1.5s infinite;
+    }
+
+    @keyframes pulseRecord {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .video-play-btn {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(14, 18, 27, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-medium);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0.9;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .video-play-btn:hover {
+      transform: scale(1.1);
+      background: var(--accent-cyan);
+      color: #000;
+      border-color: var(--accent-cyan);
+    }
+
+    /* HUD Controls Strip */
+    .prism-actions {
+      padding: 12px 16px;
+      background: var(--bg-surface-elevated);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .action-harmonic-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .harmonic-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .harmonic-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+      border-color: var(--border-medium);
+    }
+
+    .harmonic-btn.resonate.active {
+      background: rgba(255, 42, 109, 0.15);
+      border-color: var(--accent-rose);
+      color: var(--accent-rose);
+      box-shadow: 0 0 10px rgba(255, 42, 109, 0.2);
+    }
+
+    .harmonic-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Inline Echo Drawer */
+    .prism-narrative {
+      padding: 14px 16px;
+      border-top: 1px solid var(--border-subtle);
+      background: rgba(14, 18, 27, 0.6);
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+
+    .prism-narrative strong {
+      color: var(--text-primary);
+      font-weight: 600;
+      margin-right: 6px;
+    }
+
+    .prism-tags {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .prism-tag-slug {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent-cyan);
+      opacity: 0.8;
+      cursor: pointer;
+    }
+
+    .prism-tag-slug:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    /* ==========================================================================
+       DECK 2: SYNAPSE (MULTI-NODE COMMUNICATIONS)
+       ========================================================================== */
+    .synapse-deck {
+      height: 100%;
+      background: var(--bg-surface);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .synapse-horizon {
+      height: 52px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(14, 18, 27, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .synapse-tether-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .tether-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .tether-tab-btn:hover {
+      color: var(--text-secondary);
+    }
+
+    .tether-tab-btn.active {
+      color: var(--accent-cyan);
+      background: rgba(0, 242, 254, 0.08);
+    }
+
+    /* Synapse Split Workspace: Tethers Rack + Active Transmission Node */
+    .synapse-core {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Horizontal Tether Strip (Rapid Node Selector) */
+    .tether-strip {
+      padding: 10px 14px;
+      background: rgba(10, 13, 20, 0.6);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .tether-strip::-webkit-scrollbar { display: none; }
+
+    .tether-chip {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tether-chip:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: var(--border-medium);
+    }
+
+    .tether-chip.active {
+      background: rgba(0, 242, 254, 0.12);
+      border-color: var(--accent-cyan);
+    }
+
+    .tether-chip-avatar {
+      position: relative;
+      width: 22px;
+      height: 22px;
+    }
+
+    .tether-chip-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .tether-presence {
+      position: absolute;
+      bottom: -1px;
+      right: -1px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      border: 1px solid var(--bg-surface);
+    }
+
+    .presence-live { background: var(--accent-emerald); box-shadow: 0 0 6px var(--accent-emerald); }
+    .presence-idle { background: var(--accent-amber); }
+
+    .tether-chip-name {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    /* Active Conduit Header */
+    .active-conduit-header {
+      padding: 10px 18px;
+      background: rgba(21, 26, 39, 0.5);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .conduit-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .conduit-title {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .conduit-hash {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .conduit-tools {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Signal Stream (Messages Window) */
+    .signal-stream {
+      flex: 1;
+      padding: 16px 18px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-medium) transparent;
+    }
+
+    /* Completely Unique Message Signal Format (No speech bubbles) */
+    .signal-entry {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 90%;
+      position: relative;
+      animation: signalArrival 0.3s var(--ease-fluid);
+    }
+
+    @keyframes signalArrival {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .signal-entry.inbound {
+      align-self: flex-start;
+    }
+
+    .signal-entry.outbound {
+      align-self: flex-end;
+    }
+
+    .signal-envelope {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-left: 3px solid var(--text-muted);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: border-color 0.2s;
+    }
+
+    .signal-entry.inbound .signal-envelope {
+      border-left-color: var(--accent-cyan);
+      background: rgba(0, 242, 254, 0.03);
+    }
+
+    .signal-entry.outbound .signal-envelope {
+      border-left-color: var(--accent-violet);
+      background: rgba(138, 43, 226, 0.05);
+    }
+
+    .signal-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .signal-sender {
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .signal-content {
+      font-size: 0.85rem;
+      line-height: 1.45;
+      color: var(--text-primary);
+      word-break: break-word;
+    }
+
+    /* Embedded media in signal */
+    .signal-attachment {
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      margin-top: 4px;
+      max-width: 280px;
+    }
+
+    .signal-attachment img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Audio Pulse Synthesizer inline */
+    .audio-pulse-player {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0,0,0,0.3);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      margin-top: 4px;
+    }
+
+    .audio-pulse-toggle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      border: none;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .audio-waveform-bars {
+      flex: 1;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .waveform-bar {
+      width: 3px;
+      height: 30%;
+      background: var(--text-muted);
+      border-radius: 2px;
+      transition: height 0.15s, background-color 0.15s;
+    }
+
+    .audio-pulse-player.playing .waveform-bar {
+      background: var(--accent-cyan);
+      animation: waveBeat 0.8s infinite ease-in-out alternate;
+    }
+
+    @keyframes waveBeat {
+      0% { height: 20%; }
+      100% { height: 100%; }
+    }
+
+    /* Contextual Transmitter (Bottom Messaging Strip) */
+    .transmitter-deck {
+      padding: 12px 16px;
+      background: var(--bg-surface-elevated);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .transmitter-box {
+      background: rgba(7, 9, 14, 0.7);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.2s;
+    }
+
+    .transmitter-box:focus-within {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.1);
+    }
+
+    .transmitter-input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .transmitter-textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      font-size: 0.85rem;
+      outline: none;
+      resize: none;
+      height: 22px;
+      max-height: 80px;
+    }
+
+    .transmitter-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .transmitter-hardware {
+      display: flex;
+      gap: 6px;
+    }
+
+    .hardware-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      width: 26px;
+      height: 26px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .hardware-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+    }
+
+    .transmit-send-btn {
+      background: var(--accent-cyan);
+      border: none;
+      color: #07090e;
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .transmit-send-btn:hover {
+      background: #4ef6ff;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 10px rgba(0, 242, 254, 0.3);
+    }
+
+    /* ==========================================================================
+       THE SYNTHESIZER (CREATOR ENGINE / FLOATING DOCK)
+       ========================================================================== */
+    .floating-injection-dock {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+    }
+
+    .inject-master-btn {
+      background: linear-gradient(135deg, rgba(21, 26, 39, 0.95), rgba(14, 18, 27, 0.95));
+      border: 1px solid var(--border-medium);
+      backdrop-filter: blur(20px);
+      padding: 10px 22px;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.08);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.3s var(--ease-bounce);
+    }
+
+    .inject-master-btn:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 12px 35px rgba(0, 242, 254, 0.25);
+    }
+
+    .inject-master-btn .plus-glyph {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      color: #07090e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.1rem;
+    }
+
+    /* ==========================================================================
+       MODAL: THE SYNTHESIZER (MEDIA STUDIO)
+       ========================================================================== */
+    .synthesizer-modal-backplane {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(14px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s var(--ease-fluid);
+    }
+
+    .synthesizer-modal-backplane.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .synthesizer-chassis {
+      width: 900px;
+      max-width: 95vw;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: scale(0.96);
+      transition: transform 0.3s var(--ease-fluid);
+    }
+
+    .synthesizer-modal-backplane.active .synthesizer-chassis {
+      transform: scale(1);
+    }
+
+    .synth-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-surface-elevated);
+    }
+
+    .synth-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .synth-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .synth-workzone {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      height: 480px;
+    }
+
+    /* Preview Canvas */
+    .synth-preview-stage {
+      background: #000;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preview-carrier {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: var(--radius-sm);
+      border: 1px dashed var(--border-medium);
+      position: relative;
+    }
+
+    .preview-carrier img,
+    .preview-carrier video {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: filter 0.3s ease;
+    }
+
+    /* Preset Quick Samples */
+    .sample-picker-bar {
+      position: absolute;
+      bottom: 12px;
+      background: rgba(14, 18, 27, 0.85);
+      backdrop-filter: blur(8px);
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      gap: 8px;
+    }
+
+    .sample-pill {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: none;
+      color: var(--text-secondary);
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .sample-pill:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    /* Calibration Rack */
+    .synth-controls-rack {
+      background: var(--bg-surface);
+      border-left: 1px solid var(--border-subtle);
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .control-block {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .control-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    /* Aspect Shaper Selector */
+    .aspect-selector {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .aspect-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 6px 0;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .aspect-btn.active {
+      border-color: var(--accent-cyan);
+      background: rgba(0, 242, 254, 0.1);
+      color: var(--accent-cyan);
+    }
+
+    /* Spectral Filters */
+    .filter-deck-chips {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+    }
+
+    .spectral-filter-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 0.7rem;
+      padding: 8px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .spectral-filter-btn.active {
+      border-color: var(--accent-violet);
+      background: rgba(138, 43, 226, 0.15);
+      color: #fff;
+    }
+
+    .synth-input-area {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      font-size: 0.8rem;
+      outline: none;
+      resize: none;
+      height: 70px;
+    }
+
+    .synth-input-area:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .synth-footer {
+      padding: 14px 24px;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-surface-elevated);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .broadcast-target {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .target-select {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 6px 10px;
+      outline: none;
+    }
+
+    .execute-injection-btn {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+      border: none;
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .execute-injection-btn:hover {
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================================================
+       MEDIA INSPECTOR LIGHTBOX (THE PRISM EXPANSION)
+       ========================================================================== */
+    .prism-lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.94);
+      backdrop-filter: blur(25px);
+      z-index: 150;
+      display: none;
+      grid-template-columns: 1fr 380px;
+    }
+
+    .prism-lightbox.active {
+      display: grid;
+    }
+
+    .lightbox-visual-pane {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      position: relative;
+    }
+
+    .lightbox-visual-pane img,
+    .lightbox-visual-pane video {
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: var(--radius-md);
+      box-shadow: 0 0 50px rgba(0,0,0,0.8);
+    }
+
+    .lightbox-close-btn {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border-subtle);
+      border-radius: 50%;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lightbox-close-btn:hover {
+      background: var(--accent-rose);
+    }
+
+    .lightbox-telemetry-sidebar {
+      background: var(--bg-surface);
+      border-left: 1px solid var(--border-subtle);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    .echoes-stream-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+    }
+
+    .echo-unit {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      font-size: 0.8rem;
+    }
+
+    .echo-unit-head {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    /* Pulses Flyout (Telemetry/Activity) */
+    .pulses-flyout {
+      position: absolute;
+      top: 60px;
+      right: 80px;
+      width: 320px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-ambient);
+      z-index: 60;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .pulses-flyout.active {
+      display: flex;
+    }
+
+    .pulse-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-size: 0.75rem;
+      transition: background 0.2s;
+    }
+
+    .pulse-item:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Filters CSS Simulation */
+    .filter-none { filter: none; }
+    .filter-obsidian { filter: grayscale(100%) contrast(140%) brightness(90%); }
+    .filter-cyber { filter: hue-rotate(180deg) contrast(120%) saturate(150%); }
+    .filter-kodachrome { filter: saturate(160%) contrast(110%) sepia(20%); }
+    .filter-aurora { filter: hue-rotate(90deg) saturate(180%) brightness(110%); }
+
+    /* Responsive Adapters */
+    @media (max-width: 900px) {
+      .spatial-matrix {
+        grid-template-columns: 1fr;
+      }
+      .spatial-matrix.mode-nexus {
+        grid-template-columns: 1fr;
+      }
+      .synapse-deck {
+        display: none;
+      }
+      .spatial-matrix.mode-synapse .resonator-deck {
+        display: none;
+      }
+      .spatial-matrix.mode-synapse .synapse-deck {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient visual backing -->
+  <div class="ambient-canvas"></div>
+
+  <!-- ==========================================================================
+       HORIZON COMMAND DECK (TOP BAR)
+       ========================================================================== -->
+  <header class="horizon-deck">
+    <div class="brand-cluster" onclick="setSpatialView('nexus')">
+      <div class="brand-symbol">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+          <polyline points="2 17 12 22 22 17"></polyline>
+          <polyline points="2 12 12 17 22 12"></polyline>
+        </svg>
+      </div>
+      <div class="brand-title">PROCOM</div>
+      <div class="brand-badge">CORE v3.4</div>
+    </div>
+
+    <!-- Novel Dual-Vantage Matrix Mode Selector -->
+    <div class="mode-switch-track">
+      <button class="mode-btn active" id="btn-mode-nexus" onclick="setSpatialView('nexus')">
+        <div class="node-dot"></div> Nexus Matrix
+      </button>
+      <button class="mode-btn" id="btn-mode-resonator" onclick="setSpatialView('resonator')">
+        <div class="node-dot"></div> The Resonator
+      </button>
+      <button class="mode-btn" id="btn-mode-synapse" onclick="setSpatialView('synapse')">
+        <div class="node-dot"></div> Synapse Comms
+      </button>
+    </div>
+
+    <!-- Horizon Utility Elements -->
+    <div class="horizon-controls">
+      <!-- Sonar locator -->
+      <div class="sonar-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="sonarInput" placeholder="Sonar frequency scan..." oninput="filterStream(this.value)">
+      </div>
+
+      <!-- Pulse Telemetry Bell -->
+      <button class="icon-action-btn" title="Pulses (Activity Telemetry)" onclick="togglePulsesFlyout()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <div class="badge-counter" id="pulseBadge">3</div>
+      </button>
+
+      <!-- Audio Feedback Toggle -->
+      <button class="icon-action-btn" id="audioToggleBtn" title="Haptic Audio Feedback" onclick="toggleAudioFx()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+      </button>
+
+      <!-- Persona Core (Profile Pod) -->
+      <div class="persona-trigger" onclick="alert('Persona Core // Identity: Dr. Kaelen Voss\nSector: Cyber-Optics Lab\nEncryption: 4096-bit Node')">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="persona-avatar" alt="User">
+        <span class="persona-tag">k.voss</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Pulses Dropdown Flyout -->
+  <div class="pulses-flyout" id="pulsesFlyout">
+    <div style="padding: 10px 16px; background: rgba(0,0,0,0.3); font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); border-bottom: 1px solid var(--border-subtle);">
+      TELEMETRY LOG // RECENT PULSES
+    </div>
+    <div class="pulse-item">
+      <div class="pulse-dot" style="background: var(--accent-rose);"></div>
+      <div><strong>Aria Vance</strong> resonated with your media artifact <em>Orbital Array</em>.</div>
+    </div>
+    <div class="pulse-item">
+      <div class="pulse-dot" style="background: var(--accent-cyan);"></div>
+      <div><strong>Nexus System</strong> completed high-bitrate encoding for <em>Prism 04</em>.</div>
+    </div>
+    <div class="pulse-item">
+      <div class="pulse-dot" style="background: var(--accent-emerald);"></div>
+      <div><strong>Tether Request</strong> received from <strong>Marcus Thorne</strong>.</div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       WORKSPACE: SPATIAL DUAL-DECK MATRIX
+       ========================================================================== -->
+  <main class="spatial-matrix mode-nexus" id="spatialMatrix">
+
+    <!-- ------------------------------------------------------------------------
+         DECK 1: THE RESONATOR (Rich Visual & Video Stream)
+         ------------------------------------------------------------------------ -->
+    <section class="resonator-deck">
+      <div class="resonator-subbar">
+        <div class="filter-prism">
+          <button class="prism-chip active" onclick="filterMediaType('all', this)">[ Spectrum: All ]</button>
+          <button class="prism-chip" onclick="filterMediaType('kinetic', this)">[ Kinetic (Video) ]</button>
+          <button class="prism-chip" onclick="filterMediaType('optics', this)">[ Optics (Stills) ]</button>
+        </div>
+        <div class="deck-metrics">
+          <div class="metric-item">NODES: <span id="nodeCount">4 Live</span></div>
+          <div class="metric-item">BANDWIDTH: <span>94.8 MB/s</span></div>
+        </div>
+      </div>
+
+      <!-- Scrollable Mosaic Viewport -->
+      <div class="resonator-viewport">
+        <div class="media-mosaic" id="mediaMosaicContainer">
+          <!-- Dynamically populated via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------------------------
+         DECK 2: SYNAPSE (Instant Signal Conduit & Tethered Messaging)
+         ------------------------------------------------------------------------ -->
+    <section class="synapse-deck">
+      <div class="synapse-horizon">
+        <div class="synapse-tether-tabs">
+          <button class="tether-tab-btn active" onclick="switchTetherGroup('direct', this)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            Tethers (1:1)
+          </button>
+          <button class="tether-tab-btn" onclick="switchTetherGroup('collective', this)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            Collectives (Group)
+          </button>
+        </div>
+        <button class="hardware-btn" title="Simulate Inbound Transmission" onclick="simulateInboundSignal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+        </button>
+      </div>
+
+      <div class="synapse-core">
+        <!-- Rapid Tether Node Strip -->
+        <div class="tether-strip" id="tetherStrip">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Conduit Active Header -->
+        <div class="active-conduit-header">
+          <div class="conduit-status">
+            <span class="conduit-title" id="activeConduitName">Aria Vance</span>
+            <span class="conduit-hash" id="activeConduitHash">CONDUIT // #8491-A</span>
+          </div>
+          <div class="conduit-tools">
+            <button class="prism-chip" onclick="beamActiveArtifactToConduit()" title="Beam Current Media to this channel">
+              ☍ Beam Active Media
+            </button>
+          </div>
+        </div>
+
+        <!-- Signal Message Stream -->
+        <div class="signal-stream" id="signalStream">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Multi-Modal Transmitter -->
+        <div class="transmitter-deck">
+          <div class="transmitter-box">
+            <div class="transmitter-input-row">
+              <textarea class="transmitter-textarea" id="transmitterInput" placeholder="Encode message or paste telemetry hash..." onkeydown="handleTransmitterKey(event)"></textarea>
+            </div>
+            <div class="transmitter-controls">
+              <div class="transmitter-hardware">
+                <button class="hardware-btn" title="Inject Staged Artifact" onclick="openSynthesizerModal()">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                </button>
+                <button class="hardware-btn" title="Generate Audio Pulse" onclick="recordAudioPulseSimulation()">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                </button>
+              </div>
+              <button class="transmit-send-btn" onclick="executeTransmission()">
+                <span>Transmit</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       FLOATING INJECTION DOCK (THE SYNTHESIZER TRIGGER)
+       ========================================================================== -->
+  <div class="floating-injection-dock">
+    <button class="inject-master-btn" onclick="openSynthesizerModal()">
+      <div class="plus-glyph">+</div>
+      <span>Synthesizer // Inject Media</span>
+    </button>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: THE SYNTHESIZER (CREATOR & FILTER MATRIX)
+       ========================================================================== -->
+  <div class="synthesizer-modal-backplane" id="synthModal">
+    <div class="synthesizer-chassis">
+      <div class="synth-header">
+        <div class="synth-title-wrap">
+          <div class="brand-symbol" style="width:24px; height:24px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon></svg>
+          </div>
+          <span class="synth-title">The Synthesizer // Media Calibration Engine</span>
+        </div>
+        <button class="icon-action-btn" onclick="closeSynthesizerModal()">✕</button>
+      </div>
+
+      <div class="synth-workzone">
+        <!-- Live Staging Preview -->
+        <div class="synth-preview-stage">
+          <div class="preview-carrier" id="synthCarrier">
+            <img src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80" id="synthPreviewImg" class="filter-none" alt="Preview">
+            <video id="synthPreviewVideo" style="display:none;" controls loop muted></video>
+          </div>
+
+          <!-- Rapid Sample Selectors for Immediate Testing -->
+          <div class="sample-picker-bar">
+            <span style="font-family:var(--font-mono); font-size:0.65rem; color:var(--text-muted); padding:4px 6px;">Presets:</span>
+            <button class="sample-pill" onclick="loadSynthSample('photo1')">Optic: Neon Grid</button>
+            <button class="sample-pill" onclick="loadSynthSample('photo2')">Optic: Monolith</button>
+            <button class="sample-pill" onclick="loadSynthSample('video1')">Kinetic: Cyber Loop</button>
+          </div>
+        </div>
+
+        <!-- Calibration Controls Rack -->
+        <div class="synth-controls-rack">
+          <div class="control-block">
+            <label class="control-label">Aspect Shaper</label>
+            <div class="aspect-selector">
+              <button class="aspect-btn active" onclick="setSynthAspect('16/9', this)">16:9</button>
+              <button class="aspect-btn" onclick="setSynthAspect('1/1', this)">1:1</button>
+              <button class="aspect-btn" onclick="setSynthAspect('4/5', this)">4:5</button>
+              <button class="aspect-btn" onclick="setSynthAspect('21/9', this)">21:9</button>
+            </div>
+          </div>
+
+          <div class="control-block">
+            <label class="control-label">Spectral Filter Grade</label>
+            <div class="filter-deck-chips">
+              <button class="spectral-filter-btn active" onclick="setSynthFilter('filter-none', this)">Normal Passthrough</button>
+              <button class="spectral-filter-btn" onclick="setSynthFilter('filter-obsidian', this)">Obsidian Mono</button>
+              <button class="spectral-filter-btn" onclick="setSynthFilter('filter-cyber', this)">Cyber Emerald</button>
+              <button class="spectral-filter-btn" onclick="setSynthFilter('filter-kodachrome', this)">Warm Chroma</button>
+              <button class="spectral-filter-btn" onclick="setSynthFilter('filter-aurora', this)">Aurora Shift</button>
+            </div>
+          </div>
+
+          <div class="control-block">
+            <label class="control-label">Descriptor & Spectral Tags</label>
+            <textarea class="synth-input-area" id="synthDescriptor" placeholder="Enter contextual log, coordinates, or #telemetry tags..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="synth-footer">
+        <div class="broadcast-target">
+          <span class="control-label">Injection Target:</span>
+          <select class="target-select" id="synthBroadcastTarget">
+            <option value="resonator">Public Resonator Stream</option>
+            <option value="conduit">Active Synapse Conduit</option>
+            <option value="vault">Private Vault Only</option>
+          </select>
+        </div>
+        <button class="execute-injection-btn" onclick="executeMediaSynthesis()">
+          Inject Artifact ↗
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MEDIA INSPECTOR LIGHTBOX (THE PRISM EXPANSION)
+       ========================================================================== -->
+  <div class="prism-lightbox" id="prismLightbox">
+    <div class="lightbox-visual-pane">
+      <button class="lightbox-close-btn" onclick="closeLightbox()">✕</button>
+      <div id="lightboxVisualHost"></div>
+    </div>
+    <div class="lightbox-telemetry-sidebar">
+      <div>
+        <div class="origin-meta">
+          <span class="origin-handle" id="lightboxAuthor">Dr. Kaelen Voss</span>
+          <span class="origin-sector" id="lightboxSector">SECTOR 09 // HIGH RESOLUTION</span>
+        </div>
+        <p id="lightboxCaption" style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px; line-height:1.4;"></p>
+      </div>
+
+      <div style="border-top: 1px solid var(--border-subtle); padding-top:14px;">
+        <span class="control-label">ECHOES LOG (COMMUNITY DISCUSSION)</span>
+      </div>
+
+      <div class="echoes-stream-list" id="lightboxEchoesStream">
+        <!-- Injected dynamically -->
+      </div>
+
+      <div style="display:flex; gap:6px;">
+        <input type="text" id="lightboxCommentInput" placeholder="Add an echo to this artifact..." style="flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:var(--radius-sm); color:#fff; padding:6px 10px; font-size:0.75rem;">
+        <button class="harmonic-btn" onclick="addEchoToActiveLightbox()">Echo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT ARCHITECTURE
+       ========================================================================== -->
+  <script>
+    /* --------------------------------------------------------------------------
+       STATE ENGINE
+       -------------------------------------------------------------------------- */
+    const state = {
+      viewMode: 'nexus',
+      activeFilter: 'all',
+      audioFxEnabled: true,
+      activeTetherIndex: 0,
+      tetherGroup: 'direct', // 'direct' or 'collective'
+      
+      // Synthesizer creation state
+      synth: {
+        type: 'image',
+        src: 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80',
+        filter: 'filter-none',
+        aspect: '16/9'
+      },
+
+      // Resonator Media Objects (Curated High-Res Media)
+      mediaItems: [
+        {
+          id: 'res-101',
+          type: 'video',
+          src: 'https://assets.mixkit.co/videos/preview/mixkit-circuit-board-cyberpunk-animation-43615-large.mp4',
+          author: 'Nexus Hyperlabs',
+          avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80',
+          sector: 'SECTOR 04 // KINETIC CODEC',
+          aspect: 'aspect-cine',
+          aspectRatioCSS: '16/9',
+          title: 'Quantum Lensing Over Artificial Neural Web',
+          narrative: 'High-frequency telemetry recording of the deep lattice node during cold synchronization.',
+          tags: ['#QuantumFlux', '#Optics', '#KineticMesh'],
+          resonances: 1420,
+          echoes: [
+            { user: 'Aria Vance', text: 'Signal-to-noise ratio here is pristine.' },
+            { user: 'Marcus Thorne', text: 'Can we port these frequency curves into Synapse?' }
+          ],
+          hasResonated: false
+        },
+        {
+          id: 'res-102',
+          type: 'image',
+          src: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80',
+          author: 'Elena Rostova',
+          avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80',
+          sector: 'SECTOR 12 // ARCHITECTURAL VAULT',
+          aspect: 'aspect-square',
+          aspectRatioCSS: '1/1',
+          title: 'Monolithic Geometric Resonance',
+          narrative: 'Pure obsidian angular form under high angle solar radiation.',
+          tags: ['#Minimalism', '#Brutalism', '#PureForm'],
+          resonances: 840,
+          echoes: [
+            { user: 'Dr. Kaelen Voss', text: 'Geometric balance is sublime.' }
+          ],
+          hasResonated: true
+        },
+        {
+          id: 'res-103',
+          type: 'image',
+          src: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=900&q=80',
+          author: 'Cybernautics Collective',
+          avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=150&q=80',
+          sector: 'SECTOR 08 // RETRO WAVE',
+          aspect: 'aspect-tall',
+          aspectRatioCSS: '4/5',
+          title: 'Hardware Interfacing Stack 0x90',
+          narrative: 'Physical relays routed through phosphor monitors. Legacy circuits running modern signal scripts.',
+          tags: ['#HardwareHack', '#Phosphor', '#RetroGrid'],
+          resonances: 2190,
+          echoes: [
+            { user: 'Sora Tanaka', text: 'The analog warmth on those screens is unmatched.' }
+          ],
+          hasResonated: false
+        },
+        {
+          id: 'res-104',
+          type: 'video',
+          src: 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-tunnel-in-a-cyber-world-43285-large.mp4',
+          author: 'Vector Dynamics',
+          avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
+          sector: 'SECTOR 01 // KINETIC TUNNEL',
+          aspect: 'aspect-cine',
+          aspectRatioCSS: '16/9',
+          title: 'High-Throughput Photonic Conduit',
+          narrative: 'Simulating data velocity through cryogenic fibre pipelines.',
+          tags: ['#Photonic', '#Subzero', '#KineticFlow'],
+          resonances: 3410,
+          echoes: [],
+          hasResonated: false
+        }
+      ],
+
+      // Synapse Communication Tethers
+      tethers: [
+        {
+          id: 'tether-1',
+          name: 'Aria Vance',
+          type: 'direct',
+          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+          status: 'live',
+          hash: 'CONDUIT // #8491-A',
+          signals: [
+            { id: 'sig-1', sender: 'Aria Vance', inbound: true, time: '14:22:04', content: 'Calibrated the new spectral arrays. Ready to receive the media injection from Sector 04.' },
+            { id: 'sig-2', sender: 'Dr. Kaelen Voss', inbound: false, time: '14:23:10', content: 'Transmitting the video clip now via Resonator. Scrutinize the chromatic aberration in the high-gain bands.' },
+            { id: 'sig-3', sender: 'Aria Vance', inbound: true, time: '14:24:55', content: 'Visual confirmed. The waveform harmonics match our reference vector.' }
+          ]
+        },
+        {
+          id: 'tether-2',
+          name: 'Marcus Thorne',
+          type: 'direct',
+          avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80',
+          status: 'live',
+          hash: 'CONDUIT // #3302-M',
+          signals: [
+            { id: 'sig-201', sender: 'Marcus Thorne', inbound: true, time: '12:05:12', content: 'Did you evaluate the monolithic architecture piece from Elena?' },
+            { id: 'sig-202', sender: 'Dr. Kaelen Voss', inbound: false, time: '12:10:44', content: 'Yes, pinned it into the vault. Exceptional isometric contrast.' }
+          ]
+        },
+        {
+          id: 'tether-3',
+          name: 'Sora Tanaka',
+          type: 'direct',
+          avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80',
+          status: 'idle',
+          hash: 'CONDUIT // #7712-S',
+          signals: [
+            { id: 'sig-301', sender: 'Sora Tanaka', inbound: true, time: 'Yesterday', content: 'Audio pulse sample recorded for the new teaser trailer. Check playback integrity.' }
+          ]
+        },
+        {
+          id: 'tether-group-1',
+          name: 'HyperMotion Lab Swarm',
+          type: 'collective',
+          avatar: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=150&q=80',
+          status: 'live',
+          hash: 'COLLECTIVE // #SWARM-9',
+          signals: [
+            { id: 'sig-401', sender: 'Elena Rostova', inbound: true, time: '10:14:02', content: 'All nodes: please push latest 4K renders before 18:00 UTC.' },
+            { id: 'sig-402', sender: 'Dr. Kaelen Voss', inbound: false, time: '10:18:22', content: 'My render is calibrated through the Obsidian profile. Synthesizing now.' }
+          ]
+        }
+      ]
+    };
+
+    /* --------------------------------------------------------------------------
+       SYNTHESIZED WEB AUDIO API HAPTICS
+       -------------------------------------------------------------------------- */
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      return audioCtx;
+    }
+
+    function playSound(type) {
+      if (!state.audioFxEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (ctx.state === 'suspended') ctx.resume();
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        const now = ctx.currentTime;
+
+        if (type === 'resonate') {
+          // Harmonic sweet chime
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(587.33, now); // D5
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.15); // A5
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'transmit') {
+          // Futuristic laser pulse
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(80, now + 0.12);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+          osc.start(now);
+          osc.stop(now + 0.15);
+        } else if (type === 'click') {
+          // Crisp microscopic UI tick
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1400, now);
+          gain.gain.setValueAtTime(0.04, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+          osc.start(now);
+          osc.stop(now + 0.04);
+        }
+      } catch (e) {
+        // AudioContext restricted or unavailable
+      }
+    }
+
+    function toggleAudioFx() {
+      state.audioFxEnabled = !state.audioFxEnabled;
+      const btn = document.getElementById('audioToggleBtn');
+      btn.style.color = state.audioFxEnabled ? 'var(--text-primary)' : 'var(--text-muted)';
+      playSound('click');
+    }
+
+    /* --------------------------------------------------------------------------
+       SPATIAL VIEW CONTROLLER (REARRANGES ENTIRE LAYOUT)
+       -------------------------------------------------------------------------- */
+    function setSpatialView(mode) {
+      playSound('click');
+      state.viewMode = mode;
+      const matrix = document.getElementById('spatialMatrix');
+      matrix.className = `spatial-matrix mode-${mode}`;
+
+      document.getElementById('btn-mode-nexus').classList.toggle('active', mode === 'nexus');
+      document.getElementById('btn-mode-resonator').classList.toggle('active', mode === 'resonator');
+      document.getElementById('btn-mode-synapse').classList.toggle('active', mode === 'synapse');
+    }
+
+    /* --------------------------------------------------------------------------
+       RESONATOR ENGINE: RENDER CARDS
+       -------------------------------------------------------------------------- */
+    function renderResonator() {
+      const container = document.getElementById('mediaMosaicContainer');
+      container.innerHTML = '';
+
+      const items = state.mediaItems.filter(item => {
+        if (state.activeFilter === 'kinetic') return item.type === 'video';
+        if (state.activeFilter === 'optics') return item.type === 'image';
+        return true;
+      });
+
+      document.getElementById('nodeCount').innerText = `${items.length} Live`;
+
+      items.forEach(item => {
+        const card = document.createElement('article');
+        card.className = 'prism-card';
+        card.id = `card-${item.id}`;
+
+        let mediaHtml = '';
+        if (item.type === 'video') {
+          mediaHtml = `
+            <div class="prism-stage ${item.aspect}">
+              <div class="video-telemetry-overlay">
+                <div class="rec-dot"></div>
+                <span>4K // KINETIC PRO</span>
+              </div>
+              <video src="${item.src}" loop muted onmouseover="this.play()" onmouseout="this.pause()"></video>
+              <div class="video-play-btn" onclick="openLightbox('${item.id}')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              </div>
+            </div>
+          `;
+        } else {
+          mediaHtml = `
+            <div class="prism-stage ${item.aspect}" onclick="openLightbox('${item.id}')" style="cursor:zoom-in;">
+              <img src="${item.src}" alt="${item.title}" loading="lazy">
+            </div>
+          `;
+        }
+
+        const resonateClass = item.hasResonated ? 'active' : '';
+
+        card.innerHTML = `
+          <div class="prism-header">
+            <div class="origin-node">
+              <img src="${item.avatar}" class="origin-avatar" alt="${item.author}">
+              <div class="origin-meta">
+                <span class="origin-handle">${item.author}</span>
+                <span class="origin-sector">${item.sector}</span>
+              </div>
+            </div>
+            <div class="prism-optics-tag">${item.type.toUpperCase()}</div>
+          </div>
+
+          ${mediaHtml}
+
+          <div class="prism-actions">
+            <div class="action-harmonic-group">
+              <button class="harmonic-btn resonate ${resonateClass}" onclick="toggleResonance('${item.id}')">
+                <svg viewBox="0 0 24 24" fill="${item.hasResonated ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                <span id="res-count-${item.id}">${item.resonances}</span>
+              </button>
+              <button class="harmonic-btn" onclick="openLightbox('${item.id}')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                <span>${item.echoes.length}</span>
+              </button>
+            </div>
+            <div class="action-harmonic-group">
+              <button class="harmonic-btn" title="Beam directly to Synapse Conduit" onclick="beamArtifact('${item.id}')">
+                <span>☍ Beam</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="prism-narrative">
+            <strong>${item.title}:</strong> ${item.narrative}
+            <div class="prism-tags">
+              ${item.tags.map(t => `<span class="prism-tag-slug" onclick="filterByTag('${t}')">${t}</span>`).join('')}
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function toggleResonance(id) {
+      const item = state.mediaItems.find(m => m.id === id);
+      if (!item) return;
+
+      item.hasResonated = !item.hasResonated;
+      item.resonances += item.hasResonated ? 1 : -1;
+      playSound('resonate');
+
+      const countEl = document.getElementById(`res-count-${id}`);
+      if (countEl) countEl.innerText = item.resonances;
+
+      const card = document.getElementById(`card-${id}`);
+      if (card) {
+        const btn = card.querySelector('.harmonic-btn.resonate');
+        if (btn) btn.classList.toggle('active', item.hasResonated);
+      }
+    }
+
+    function filterMediaType(type, btn) {
+      playSound('click');
+      state.activeFilter = type;
+      document.querySelectorAll('.filter-prism .prism-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderResonator();
+    }
+
+    function filterByTag(tag) {
+      playSound('click');
+      const input = document.getElementById('sonarInput');
+      input.value = tag;
+      filterStream(tag);
+    }
+
+    function filterStream(query) {
+      const clean = query.toLowerCase().trim();
+      const cards = document.querySelectorAll('.prism-card');
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(clean) ? 'flex' : 'none';
+      });
+    }
+
+    /* --------------------------------------------------------------------------
+       SYNAPSE ENGINE: CONDUITS, TETHERS, AND SIGNAL STREAM
+       -------------------------------------------------------------------------- */
+    function renderTethers() {
+      const strip = document.getElementById('tetherStrip');
+      strip.innerHTML = '';
+
+      const filtered = state.tethers.filter(t => t.type === state.tetherGroup);
+
+      filtered.forEach((tether, idx) => {
+        const isSelected = (idx === state.activeTetherIndex);
+        const chip = document.createElement('div');
+        chip.className = `tether-chip ${isSelected ? 'active' : ''}`;
+        chip.onclick = () => selectTether(idx);
+
+        chip.innerHTML = `
+          <div class="tether-chip-avatar">
+            <img src="${tether.avatar}" alt="${tether.name}">
+            <div class="tether-presence ${tether.status === 'live' ? 'presence-live' : 'presence-idle'}"></div>
+          </div>
+          <span class="tether-chip-name">${tether.name}</span>
+        `;
+        strip.appendChild(chip);
+      });
+
+      renderActiveSignalStream();
+    }
+
+    function switchTetherGroup(group, btn) {
+      playSound('click');
+      state.tetherGroup = group;
+      state.activeTetherIndex = 0;
+      document.querySelectorAll('.synapse-tether-tabs .tether-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTethers();
+    }
+
+    function selectTether(idx) {
+      playSound('click');
+      state.activeTetherIndex = idx;
+      renderTethers();
+    }
+
+    function renderActiveSignalStream() {
+      const filtered = state.tethers.filter(t => t.type === state.tetherGroup);
+      const active = filtered[state.activeTetherIndex];
+      if (!active) return;
+
+      document.getElementById('activeConduitName').innerText = active.name;
+      document.getElementById('activeConduitHash').innerText = active.hash;
+
+      const stream = document.getElementById('signalStream');
+      stream.innerHTML = '';
+
+      active.signals.forEach(sig => {
+        const entry = document.createElement('div');
+        entry.className = `signal-entry ${sig.inbound ? 'inbound' : 'outbound'}`;
+
+        let attachmentHtml = '';
+        if (sig.attachment) {
+          attachmentHtml = `
+            <div class="signal-attachment">
+              <img src="${sig.attachment}" alt="Payload">
+            </div>
+          `;
+        }
+
+        let audioHtml = '';
+        if (sig.isAudio) {
+          audioHtml = `
+            <div class="audio-pulse-player" onclick="toggleAudioPulsePlayback(this)">
+              <button class="audio-pulse-toggle">▶</button>
+              <div class="audio-waveform-bars">
+                ${Array(20).fill(0).map(() => `<div class="waveform-bar" style="height:${Math.floor(Math.random()*80 + 20)}%"></div>`).join('')}
+              </div>
+              <span style="font-family:var(--font-mono); font-size:0.65rem; color:var(--text-muted);">0:04</span>
+            </div>
+          `;
+        }
+
+        entry.innerHTML = `
+          <div class="signal-envelope">
+            <div class="signal-meta">
+              <span class="signal-sender">${sig.sender}</span>
+              <span>${sig.time}</span>
+            </div>
+            ${sig.content ? `<div class="signal-content">${sig.content}</div>` : ''}
+            ${attachmentHtml}
+            ${audioHtml}
+          </div>
+        `;
+        stream.appendChild(entry);
+      });
+
+      stream.scrollTop = stream.scrollHeight;
+    }
+
+    function toggleAudioPulsePlayback(player) {
+      playSound('resonate');
+      player.classList.toggle('playing');
+      const toggle = player.querySelector('.audio-pulse-toggle');
+      toggle.innerText = player.classList.contains('playing') ? '■' : '▶';
+    }
+
+    function executeTransmission() {
+      const input = document.getElementById('transmitterInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const filtered = state.tethers.filter(t => t.type === state.tetherGroup);
+      const active = filtered[state.activeTetherIndex];
+      if (!active) return;
+
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+
+      active.signals.push({
+        id: `sig-${Date.now()}`,
+        sender: 'Dr. Kaelen Voss',
+        inbound: false,
+        time: timeStr,
+        content: text
+      });
+
+      input.value = '';
+      playSound('transmit');
+      renderActiveSignalStream();
+
+      // Trigger automatic contextual response simulation after 1.8 seconds
+      setTimeout(() => {
+        simulateInboundSignal();
+      }, 1800);
+    }
+
+    function handleTransmitterKey(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        executeTransmission();
+      }
+    }
+
+    function simulateInboundSignal() {
+      const filtered = state.tethers.filter(t => t.type === state.tetherGroup);
+      const active = filtered[state.activeTetherIndex];
+      if (!active) return;
+
+      const responses = [
+        "Signal telemetry confirmed. Running calibration check.",
+        "Payload acknowledged. Ready to link with Resonator spectrum.",
+        "Harmonics verified. Re-routing output frequency.",
+        "Data capsule received with 0% checksum error."
+      ];
+      const randomText = responses[Math.floor(Math.random() * responses.length)];
+
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+
+      active.signals.push({
+        id: `sig-${Date.now()}`,
+        sender: active.name,
+        inbound: true,
+        time: timeStr,
+        content: randomText
+      });
+
+      playSound('transmit');
+      renderActiveSignalStream();
+
+      // Bump pulse notification counter
+      const badge = document.getElementById('pulseBadge');
+      badge.innerText = parseInt(badge.innerText) + 1;
+    }
+
+    function recordAudioPulseSimulation() {
+      const filtered = state.tethers.filter(t => t.type === state.tetherGroup);
+      const active = filtered[state.activeTetherIndex];
+      if (!active) return;
+
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      active.signals.push({
+        id: `sig-${Date.now()}`,
+        sender: 'Dr. Kaelen Voss',
+        inbound: false,
+        time: timeStr,
+        content: 'Audio telemetry pulse burst:',
+        isAudio: true
+      });
+
+      playSound('transmit');
+      renderActiveSignalStream();
+    }
+
+    function beamArtifact(id) {
+      const item = state.mediaItems.find(m => m.id === id);
+      if (!item) return;
+
+      const filtered = state.tethers.filter(t => t.type === state.tetherGroup);
+      const active = filtered[state.activeTetherIndex];
+      if (!active) return;
+
+      active.signals.push({
+        id: `sig-${Date.now()}`,
+        sender: 'Dr. Kaelen Voss',
+        inbound: false,
+        time: 'Just now',
+        content: `Beamed artifact from Resonator: "${item.title}"`,
+        attachment: item.src
+      });
+
+      playSound('transmit');
+      renderActiveSignalStream();
+
+      // If user is in Resonator view, switch to Nexus to reveal the beamed artifact
+      if (state.viewMode === 'resonator') {
+        setSpatialView('nexus');
+      }
+    }
+
+    function beamActiveArtifactToConduit() {
+      if (state.mediaItems.length > 0) {
+        beamArtifact(state.mediaItems[0].id);
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       THE SYNTHESIZER: MEDIA INJECTION ENGINE
+       -------------------------------------------------------------------------- */
+    function openSynthesizerModal() {
+      playSound('click');
+      document.getElementById('synthModal').classList.add('active');
+    }
+
+    function closeSynthesizerModal() {
+      playSound('click');
+      document.getElementById('synthModal').classList.remove('active');
+    }
+
+    function loadSynthSample(sampleKey) {
+      playSound('click');
+      const img = document.getElementById('synthPreviewImg');
+      const vid = document.getElementById('synthPreviewVideo');
+
+      if (sampleKey === 'photo1') {
+        state.synth.type = 'image';
+        state.synth.src = 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80';
+        img.style.display = 'block';
+        img.src = state.synth.src;
+        vid.style.display = 'none';
+        vid.pause();
+      } else if (sampleKey === 'photo2') {
+        state.synth.type = 'image';
+        state.synth.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80';
+        img.style.display = 'block';
+        img.src = state.synth.src;
+        vid.style.display = 'none';
+        vid.pause();
+      } else if (sampleKey === 'video1') {
+        state.synth.type = 'video';
+        state.synth.src = 'https://assets.mixkit.co/videos/preview/mixkit-cyber-city-with-flying-cars-and-tall-buildings-42999-large.mp4';
+        img.style.display = 'none';
+        vid.style.display = 'block';
+        vid.src = state.synth.src;
+        vid.play();
+      }
+    }
+
+    function setSynthAspect(ratio, btn) {
+      playSound('click');
+      state.synth.aspect = ratio;
+      document.querySelectorAll('.aspect-selector .aspect-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const carrier = document.getElementById('synthCarrier');
+      carrier.style.aspectRatio = ratio;
+    }
+
+    function setSynthFilter(filterClass, btn) {
+      playSound('click');
+      state.synth.filter = filterClass;
+      document.querySelectorAll('.filter-deck-chips .spectral-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const img = document.getElementById('synthPreviewImg');
+      const vid = document.getElementById('synthPreviewVideo');
+      img.className = filterClass;
+      vid.className = filterClass;
+    }
+
+    function executeMediaSynthesis() {
+      const descInput = document.getElementById('synthDescriptor');
+      const target = document.getElementById('synthBroadcastTarget').value;
+      const text = descInput.value.trim() || 'Synthesized multi-spectral artifact';
+
+      playSound('resonate');
+
+      if (target === 'resonator') {
+        const newItem = {
+          id: `res-${Date.now()}`,
+          type: state.synth.type,
+          src: state.synth.src,
+          author: 'Dr. Kaelen Voss',
+          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+          sector: 'SECTOR 09 // NEW INJECTION',
+          aspect: state.synth.aspect === '1/1' ? 'aspect-square' : (state.synth.aspect === '4/5' ? 'aspect-tall' : 'aspect-cine'),
+          aspectRatioCSS: state.synth.aspect,
+          title: 'Direct Synthesizer Injection',
+          narrative: text,
+          tags: ['#UserInjected', '#ProcomMesh'],
+          resonances: 1,
+          echoes: [],
+          hasResonated: true
+        };
+
+        state.mediaItems.unshift(newItem);
+        renderResonator();
+      } else if (target === 'conduit') {
+        const filtered = state.tethers.filter(t => t.type === state.tetherGroup);
+        const active = filtered[state.activeTetherIndex];
+        if (active) {
+          active.signals.push({
+            id: `sig-${Date.now()}`,
+            sender: 'Dr. Kaelen Voss',
+            inbound: false,
+            time: 'Just now',
+            content: text,
+            attachment: state.synth.src
+          });
+          renderActiveSignalStream();
+        }
+      }
+
+      descInput.value = '';
+      closeSynthesizerModal();
+    }
+
+    /* --------------------------------------------------------------------------
+       PRISM LIGHTBOX (EXPANDED INSPECTOR)
+       -------------------------------------------------------------------------- */
+    let currentLightboxItem = null;
+
+    function openLightbox(id) {
+      playSound('click');
+      const item = state.mediaItems.find(m => m.id === id);
+      if (!item) return;
+
+      currentLightboxItem = item;
+      const host = document.getElementById('lightboxVisualHost');
+      host.innerHTML = '';
+
+      if (item.type === 'video') {
+        host.innerHTML = `<video src="${item.src}" controls autoplay loop></video>`;
+      } else {
+        host.innerHTML = `<img src="${item.src}" alt="${item.title}">`;
+      }
+
+      document.getElementById('lightboxAuthor').innerText = item.author;
+      document.getElementById('lightboxSector').innerText = item.sector;
+      document.getElementById('lightboxCaption').innerText = item.narrative;
+
+      renderLightboxEchoes();
+      document.getElementById('prismLightbox').classList.add('active');
+    }
+
+    function renderLightboxEchoes() {
+      if (!currentLightboxItem) return;
+      const stream = document.getElementById('lightboxEchoesStream');
+      stream.innerHTML = '';
+
+      if (currentLightboxItem.echoes.length === 0) {
+        stream.innerHTML = `<div style="font-size:0.75rem; color:var(--text-muted); font-style:italic;">No echoes recorded yet. Inject the first harmonic feedback below.</div>`;
+        return;
+      }
+
+      currentLightboxItem.echoes.forEach(e => {
+        const unit = document.createElement('div');
+        unit.className = 'echo-unit';
+        unit.innerHTML = `
+          <div class="echo-unit-head">
+            <strong>${e.user}</strong>
+            <span>Verified Node</span>
+          </div>
+          <div>${e.text}</div>
+        `;
+        stream.appendChild(unit);
+      });
+    }
+
+    function addEchoToActiveLightbox() {
+      const input = document.getElementById('lightboxCommentInput');
+      const text = input.value.trim();
+      if (!text || !currentLightboxItem) return;
+
+      currentLightboxItem.echoes.push({
+        user: 'Dr. Kaelen Voss',
+        text: text
+      });
+
+      input.value = '';
+      playSound('transmit');
+      renderLightboxEchoes();
+      renderResonator(); // Update counter in the grid
+    }
+
+    function closeLightbox() {
+      playSound('click');
+      const host = document.getElementById('lightboxVisualHost');
+      host.innerHTML = '';
+      document.getElementById('prismLightbox').classList.remove('active');
+      currentLightboxItem = null;
+    }
+
+    /* --------------------------------------------------------------------------
+       TELEMETRY PULSES FLYOUT
+       -------------------------------------------------------------------------- */
+    function togglePulsesFlyout() {
+      playSound('click');
+      const flyout = document.getElementById('pulsesFlyout');
+      flyout.classList.toggle('active');
+    }
+
+    // Close flyout on clicking outside
+    document.addEventListener('click', (e) => {
+      const flyout = document.getElementById('pulsesFlyout');
+      const trigger = e.target.closest('.icon-action-btn');
+      if (!flyout.contains(e.target) && !trigger && flyout.classList.contains('active')) {
+        flyout.classList.remove('active');
+      }
+    });
+
+    /* --------------------------------------------------------------------------
+       INITIAL BOOTSTRAP
+       -------------------------------------------------------------------------- */
+    window.addEventListener('DOMContentLoaded', () => {
+      renderResonator();
+      renderTethers();
+    });
+  </script>
+</body>
+</html>
